@@ -1,0 +1,4 @@
+/server/node_modules
+/front/dist
+/front/.cache
+/front/node_modules
