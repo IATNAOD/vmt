@@ -25,22 +25,21 @@ module.exports = async app => {
     res.redirect(frontURL);
   })
 
-  // app.get('/current-balance', {
-  //   preValidation: fastifyPassport.authenticate('jwt', { session: false })
-  // }, async function (request, reply) {
+  app.get('/search', {
+    preValidation: [
+      isAuth()
+    ]
+  }, async function (request, reply) {
+    const { query: { search } } = request;
 
-  //   let allTransaction = await Transactions.find({ user: request.user._id }).select('type').select('value').exec()
-  //   let balance = 0;
+    let allSearchedUsers = await Users.find({ $text: { $search: search }, _id: { $ne: request.user._id } })
 
-  //   for (let i = 0; i < allTransaction.length; i++)
-  //     if (allTransaction[i].type == 'INCOME')
-  //       balance += allTransaction[i].value
-  //     else if (allTransaction[i].type == 'OUTCOME')
-  //       balance -= allTransaction[i].value
+    return reply.send({
+      success: true,
+      users: allSearchedUsers
+    });
 
-  //   return reply.send({ success: true, balance })
-
-  // });
+  })
 
   // get current user info
   app.get('/current', {

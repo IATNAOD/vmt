@@ -5,14 +5,13 @@ const { Schema } = mongoose;
 const UsersSchema = new Schema({
   googleId: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   displayName: {
     type: String,
   },
   email: {
-    type: String
+    type: String,
   },
   avatar: {
     type: String,
@@ -22,5 +21,7 @@ const UsersSchema = new Schema({
     default: () => Date.now()
   },
 });
+
+UsersSchema.index({ email: 'text' });
 
 mongoose.model('Users', UsersSchema);

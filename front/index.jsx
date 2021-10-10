@@ -7,7 +7,6 @@ import { createBrowserHistory } from 'history';
 
 import './css/style.sass';
 import 'babel-polyfill';
-import 'sweetalert/dist/sweetalert.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 import createStore from './store/createStore';

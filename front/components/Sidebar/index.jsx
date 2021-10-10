@@ -14,6 +14,7 @@ export default connect((s) => ({
 
 })(
   ({
+    PathName,
     user,
   }) => {
     const [SidebarIsOpen, changeSidebarIsOpen] = useState(cookies.get('SidebarIsOpen') == 'true' ? true : false)
@@ -52,7 +53,6 @@ export default connect((s) => ({
         <div className="menu">
           <ul className="list">
             <li>
-
               <div className="user-info" style={{ display: "grid" }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Link className="image" to={'/profile'}>
@@ -65,7 +65,18 @@ export default connect((s) => ({
                 </div>
               </div>
             </li>
-
+            <li className={PathName == '/' ? 'active open' : ''}>
+              <Link to={'/'}>
+                <i className="zmdi zmdi-home"></i>
+                <span>Главная</span>
+              </Link>
+            </li>
+            <li className={PathName == '/roles' ? 'active open' : ''}>
+              <Link to={'/roles'}>
+                <i className="zmdi zmdi-account-o"></i>
+                <span>Роли</span>
+              </Link>
+            </li>
           </ul>
         </div>
       </aside >

@@ -6,11 +6,13 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import LoginPage from '../../pages/Login';
 import HomePage from '../../pages/Home';
+import RolesPage from '../../pages/Roles';
 
 import Sidebar from '../Sidebar';
 
 import { getCurrentAccountInfo, clearAllUserErrors } from './../../store/actions/user.actions'
-import { getAllDataSets, clearAllDataSetsErrors } from './../../store/actions/datasets.actions'
+import { getDatahubData, clearAllDathubError } from '../../store/actions/datahub.actions'
+import { getUserOwnRoles, clearAllRolesError } from '../../store/actions/roles.actions'
 
 const RestrictAccessRoute = ({ exact, path, render, forAuth = true, forRoles = [], role, auth, to, roleTo }) => {
 
@@ -32,22 +34,28 @@ const RestrictAccessRoute = ({ exact, path, render, forAuth = true, forRoles = [
 export default connect((s) => ({
   user: s.user.state,
   userError: s.user.error,
-  datasetsError: s.datasets.error
+  datahubError: s.datahub.error,
+  rolesError: s.roles.error,
 }), {
   getCurrentAccountInfo,
   clearAllUserErrors,
-  getAllDataSets,
-  clearAllDataSetsErrors,
+  getDatahubData,
+  clearAllDathubError,
+  getUserOwnRoles,
+  clearAllRolesError,
 })(
   ({
     user,
     userError,
-    datasetsError,
+    datahubError,
+    rolesError,
 
     getCurrentAccountInfo,
     clearAllUserErrors,
-    getAllDataSets,
-    clearAllDataSetsErrors,
+    getDatahubData,
+    clearAllDathubError,
+    getUserOwnRoles,
+    clearAllRolesError,
   }) => {
     const history = useHistory()
     const [PathName, changePathName] = useState(location.pathname)
@@ -64,78 +72,12 @@ export default connect((s) => ({
 
     useEffect(() => {
 
-      if (user?.googleId)
-        getAllDataSets()
+      if (user && user.googleId) {
+        getDatahubData()
+        getUserOwnRoles()
+      }
 
     }, [user?.googleId])
-
-    // useEffect(() => {
-
-    //   if (user && user.token && user.role != 'worker') {
-    //     getCurrentAccountBalance(user.token)
-    //     getSettingsUser(user.token)
-    //     getBuilderUpdates(user.token)
-    //     getOwnBuilder(user.token)
-    //     getOwnWorkers(user.token)
-    //     getOwnMarks(user.token)
-    //     getOwnGrabbers(user.token)
-    //     getOwnLoaders(user.token)
-    //     getWorkersLogs({
-    //       worker: workerLogsFilter.worker == 'all' ? null : workerLogsFilter.worker,
-    //       logid: workerLogsFilter.logid,
-    //       action: workerLogsFilter.action == 'all' ? null : workerLogsFilter.action,
-    //       startDate: workerLogsFilter.startDate,
-    //       endDate: workerLogsFilter.endDate,
-    //       token: user.token,
-    //     })
-    //     getOwnTransactions({ token: user.token })
-    //     getOwnAllLogs({
-    //       ...allLogsFilter,
-    //       country: allLogsFilter.country == 'all' ? '' : allLogsFilter.country,
-    //       important: allLogsFilter.important == 'all' ? '' : allLogsFilter.important,
-    //       mark: allLogsFilter.mark == 'all' ? '' : allLogsFilter.mark,
-    //       token: user.token,
-    //     })
-    //     getOwnAllFiles({
-    //       ...allFilesFilter,
-    //       token: user.token,
-    //     })
-    //     getOwnAllPasswords({
-    //       ...allPasswordsFilter,
-    //       country: allPasswordsFilter.country == 'all' ? '' : allPasswordsFilter.country,
-    //       token: user.token,
-    //     })
-    //     getOwnAllCards({
-    //       ...allCardsFilter,
-    //       country: allCardsFilter.country == 'all' ? '' : allCardsFilter.country,
-    //       token: user.token,
-    //     })
-    //     getOwnAllForDownload({
-    //       status: allForDownloadFilter.status == 'all' ? '' : allForDownloadFilter.status,
-    //       token: user.token
-    //     })
-    //     getOwnAllSMTP({ token: user.token })
-    //     getOwnAllCpanels({
-    //       ...allCpanelsFilter,
-    //       token: user.token
-    //     })
-    //     getOwnAllStats({
-    //       ...allStatsFilter,
-    //       token: user.token
-    //     })
-    //     getOwnAllWordpress({ token: user.token })
-    //     getHomeStats(user.token)
-    //   } else if (user && user.token && user.role == 'worker') {
-    //     getOwnAllLogs({
-    //       ...allLogsFilter,
-    //       country: allLogsFilter.country == 'all' ? '' : allLogsFilter.country,
-    //       important: allLogsFilter.important == 'all' ? '' : allLogsFilter.important,
-    //       mark: allLogsFilter.mark == 'all' ? '' : allLogsFilter.mark,
-    //       token: user.token,
-    //     })
-    //   }
-
-    // }, [user?.role])
 
     useEffect(() => {
 
@@ -156,8 +98,8 @@ export default connect((s) => ({
 
     useEffect(() => {
 
-      if (datasetsError) {
-        toast.error(datasetsError, {
+      if (datahubError) {
+        toast.error(datahubError, {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -166,10 +108,27 @@ export default connect((s) => ({
           draggable: true,
           progress: undefined,
         });
-        clearAllDataSetsErrors()
+        clearAllDathubError()
       }
 
-    }, [datasetsError])
+    }, [datahubError])
+
+    useEffect(() => {
+
+      if (rolesError) {
+        toast.error(rolesError, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        clearAllRolesError()
+      }
+
+    }, [rolesError])
 
     return (
       <div className='text-body d-inline-block w-100'>
@@ -196,6 +155,15 @@ export default connect((s) => ({
             exact={true}
             path="/"
             render={() => <HomePage />}
+            forAuth={true}
+            auth={user?.googleId}
+            to={'/login'}
+          />
+
+          <RestrictAccessRoute
+            exact={true}
+            path="/roles"
+            render={() => <RolesPage />}
             forAuth={true}
             auth={user?.googleId}
             to={'/login'}

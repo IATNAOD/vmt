@@ -2,3 +2,6 @@
 /front/dist
 /front/.cache
 /front/node_modules
+
+/server/static/*
+!/server/static/

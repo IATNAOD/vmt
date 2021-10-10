@@ -10,7 +10,7 @@ import sagas from './sagas';
 const persistConfig = {
   key: 'risetop',
   storage,
-  blacklist: []
+  blacklist: ['roles']
 };
 
 const loggerActionColors = {

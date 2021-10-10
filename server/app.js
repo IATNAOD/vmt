@@ -18,6 +18,7 @@ mongoose.connect('mongodb://localhost:27017/vmt', { useNewUrlParser: true, useUn
 
 // mongoDB models
 require('./models/Users')
+require('./models/Roles')
 
 const app = Fastify({
   bodyLimit: 12485760 * 15,
@@ -43,6 +44,8 @@ fastifyPassport.use(new GoogleStrategy({
   callbackURL: 'http://localhost:8000/users/login/return'
 }, function (accessToken, refreshToken, profile, done) {
   return Users.findOne({ googleId: profile.id }).then(async currentUser => {
+
+    console.log(profile)
 
     if (!currentUser) {
       currentUser = await new Users({

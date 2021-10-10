@@ -110,7 +110,6 @@
   position: relative
 
   .custom-input-07
-    padding-bottom: 10px
 
   .enter
     position: relative
@@ -322,3 +321,44 @@ input:checked + .slider:before
 
 .width-80 
   width: 80px!important
+
+.own-custom-select
+
+  .own-custom-select-list
+    user-select: none
+    transition: 0.4s ease-out all
+    overflow-y: overlay
+    position: absolute
+    top: calc(100% - 1px)
+    left: 0
+    width: 100%
+    background: #fff
+    border: 1px solid #ccc
+    border-radius: 10px
+    max-height: 200px
+    z-index: 6
+
+    &.none
+      opacity: 0
+      z-index: -1
+
+    ul
+      padding: 6px
+      list-style: none
+      margin: 0
+
+      li
+        padding: 5px
+        text-align: left
+
+        a
+          font-size: 12px
+          font-family: "WeirdRegular"
+          color: black
+
+          &:hover
+            cursor: pointer
+            color: grey!important
+
+.overflow-x-scroll
+  overflow-x: scroll

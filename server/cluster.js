@@ -6,7 +6,7 @@ const pid = process.pid;
 
 if (Cluster.isMaster) {
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < cpusCount - 1; i++) {
     let worker = Cluster.fork()
 
     worker.on('exit', () => {
